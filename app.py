@@ -267,7 +267,7 @@ def load_logs_by_period(start_date: date, end_date: date, version: int):
     (zero consultas extras ao Supabase)."""
     try:
         return _paginate(
-            lambda: supabase.table("atividades")
+            lambda: supabase.table("atividades_danilo")
             .select("*")
             .gte("date", start_date.isoformat())
             .lte("date", end_date.isoformat())
@@ -278,7 +278,7 @@ def load_logs_by_period(start_date: date, end_date: date, version: int):
 
 def get_existing_signatures_for_sheet(sheet_name: str, start_date: date, end_date: date) -> Counter:
     data = _paginate(
-        lambda: supabase.table("atividades")
+        lambda: supabase.table("atividades_danilo")
         .select("id, timestamp, mensagem")
         .eq("sheet_name", sheet_name)
         .gte("date", start_date.isoformat())
@@ -295,7 +295,7 @@ def add_log_entries_bulk(logs_list) -> list:
     for i in range(0, len(logs_list), chunk_size):
         chunk = logs_list[i : i + chunk_size]
         try:
-            supabase.table("atividades").insert(chunk).execute()
+            supabase.table("atividades_danilo").insert(chunk).execute()
         except Exception as e:
             erros.append(f"Erro ao salvar lote de registros no Supabase: {e}")
     return erros
